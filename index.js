@@ -32,12 +32,20 @@ const run = async () => {
             const products = await cursor.toArray();
             res.send(products);
         });
+
         // Single Product API
         app.get('/inventory/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) };
             const product = await productsCollection.findOne(query);
             res.send(product);
+        });
+
+        // Add Product API
+        app.post('/inventory', async (req, res) => {
+            const product = req.body;
+            const result = await productsCollection.insertOne(product);
+            res.send(result);
         });
 
         // Delete Product API
