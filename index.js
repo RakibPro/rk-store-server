@@ -53,6 +53,7 @@ const run = async () => {
             const id = req.params.id;
             const updatedProductQuantity = req.body.productQuantity;
             const updatedProductSold = req.body.productSold;
+
             const filter = { _id: new ObjectId(id) };
             const options = { upsert: true };
             const updatedDoc = {
