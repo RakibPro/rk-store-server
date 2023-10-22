@@ -73,6 +73,23 @@ const run = async () => {
             res.send(product);
         });
 
+        // My Items API
+        app.get('/myitems', verifyJWT, async (req, res) => {
+            let query = {};
+            const decoded = req.decoded;
+            if (req.query.email) {
+                query = {
+                    email: req.query.email,
+                };
+            }
+            if (decoded.email !== req.query.email) {
+                res.status(403).send({ message: 'unauthorized access' });
+            }
+            const cursor = productsCollection.find(query);
+            const products = await cursor.toArray();
+            res.send(products);
+        });
+
         // Add Product API
         app.post('/inventory', verifyJWT, async (req, res) => {
             const product = req.body;
@@ -85,7 +102,6 @@ const run = async () => {
             const id = req.params.id;
             const updatedProductQuantity = req.body.productQuantity;
             const updatedProductSold = req.body.productSold;
-
             const filter = { _id: new ObjectId(id) };
             const options = { upsert: true };
             const updatedDoc = {
